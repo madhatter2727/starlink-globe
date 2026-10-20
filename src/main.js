@@ -9,8 +9,8 @@ import './style.css';
 const $ = (id) => document.getElementById(id);
 const R_EARTH = 6371;
 const NEWEST_LAUNCHES = 6;
-const COLOR_BASE = [0.74, 0.84, 1.0];
-const COLOR_FRESH = [1.0, 0.66, 0.24];
+const COLOR_BASE = [0.62, 0.72, 0.9];
+const COLOR_FRESH = [1.0, 0.62, 0.18];
 const COLOR_SEL = [0.3, 1.0, 0.76];
 
 // ---------- scene ----------
@@ -89,7 +89,7 @@ async function init() {
     m.fresh = fresh.has(m.launch);
     if (m.fresh) nFresh++;
     sats.col.set(m.fresh ? COLOR_FRESH : COLOR_BASE, i * 3);
-    sats.size[i] = m.fresh ? 1.7 : 1;
+    sats.size[i] = m.fresh ? 2.3 : 0.9;
   });
   sats.baseSize = sats.size.slice();
   scene.add(sats.points);
@@ -98,7 +98,7 @@ async function init() {
   $('n-base').textContent = (meta.length - nFresh).toLocaleString('en-US');
   const age = data.fetchedAt ? Math.max(0, Math.round((Date.now() - Date.parse(data.fetchedAt)) / 3600e3)) : null;
   $('dataline').textContent = data.source === 'snapshot'
-    ? `Snapshot data${age != null ? ` · ${age}h old` : ''}`
+    ? `Snapshot data${age != null ? ` · updated ${age < 1 ? '<1' : age}h ago` : ''}`
     : 'Live CelesTrak data';
   worker.postMessage({ type: 'init', fields: data.fields, rows: data.rows });
 }
@@ -210,7 +210,7 @@ const trailGeo = new THREE.BufferGeometry();
 trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(TRAIL_N * 3), 3));
 const trailCol = new Float32Array(TRAIL_N * 3);
 for (let k = 0; k < TRAIL_N; k++) {
-  const a = Math.pow(k / (TRAIL_N - 1), 1.6);
+  const a = Math.pow(k / (TRAIL_N - 1), 1.3) * 1.4;
   trailCol.set([COLOR_SEL[0] * a, COLOR_SEL[1] * a, COLOR_SEL[2] * a], k * 3);
 }
 trailGeo.setAttribute('color', new THREE.BufferAttribute(trailCol, 3));
@@ -264,7 +264,7 @@ function updateHud(t) {
 // ---------- camera start: frame the day/night terminator ----------
 updateSunAndEarth(simNow());
 {
-  const dir = sunDir.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), -1.15);
+  const dir = sunDir.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), -1.35);
   dir.y = 0.32; dir.normalize();
   camera.position.copy(dir.multiplyScalar(innerWidth < 760 ? 5.4 : 3.6));
 }

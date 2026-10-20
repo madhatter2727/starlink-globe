@@ -46,7 +46,7 @@ export function createEarth(sunDir) {
         float clouds = smoothstep(0.15, 0.9, data.b);
         float ocean = 1.0 - smoothstep(0.2, 0.5, data.g);
 
-        float dayMix = smoothstep(-0.12, 0.25, ndl);
+        float dayMix = smoothstep(-0.08, 0.18, ndl);
         float light = clamp(ndl, 0.0, 1.0);
         vec3 dayCol = day * (0.08 + 1.05 * light);
         dayCol = mix(dayCol, vec3(1.0) * (0.06 + 1.0 * light), clouds * 0.85);
@@ -64,7 +64,7 @@ export function createEarth(sunDir) {
         float atmoLight = smoothstep(-0.25, 0.6, ndl);
         col += vec3(0.3, 0.55, 1.0) * fres * atmoLight * 0.9;
         // warm terminator band
-        col += vec3(1.0, 0.45, 0.2) * fres * smoothstep(0.25, 0.0, abs(ndl)) * 0.25;
+        col += vec3(1.0, 0.5, 0.25) * fres * smoothstep(0.2, 0.0, abs(ndl)) * 0.12;
         gl_FragColor = vec4(col, 1.0);
         #include <colorspace_fragment>
       }`,
