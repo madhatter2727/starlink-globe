@@ -1,4 +1,74 @@
-html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+:root {
+  --fg: #e8edf5; --muted: #8a94a6; --line: rgba(255,255,255,.12);
+  --panel: rgba(8,10,14,.62); --amber: #ffb547; --sel: #4dffc3;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #000; color: var(--fg); overflow: hidden; -webkit-font-smoothing: antialiased; }
 #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-#loading { position: fixed; inset: 0; display: grid; place-items: center; color: #8a94a6; font: 500 13px/1 system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; pointer-events: none; transition: opacity .6s; }
+#loading { position: fixed; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 12px; letter-spacing: .3em; text-transform: uppercase; pointer-events: none; transition: opacity .8s; }
 #loading.done { opacity: 0; }
+.muted { color: var(--muted); }
+.kicker { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 8px #ff3b3b; animation: pulse 1.6s infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+.brand { position: fixed; top: calc(28px + env(safe-area-inset-top)); left: 32px; pointer-events: none; }
+.brand h1 { margin: 10px 0 14px; font-size: 44px; font-weight: 300; letter-spacing: .42em; line-height: 1; }
+.count b { display: block; font-size: 34px; font-weight: 600; letter-spacing: .01em; font-variant-numeric: tabular-nums; }
+.count span { font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+
+.clock { position: fixed; top: calc(30px + env(safe-area-inset-top)); right: 32px; text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+.clock #clock { font-size: 15px; margin-bottom: 6px; }
+.clock .muted { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+
+.legend { position: fixed; left: 32px; bottom: calc(30px + env(safe-area-inset-bottom)); font-size: 12px; letter-spacing: .06em; display: grid; gap: 8px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 9px; vertical-align: 1px; }
+.dot.base { background: #c9dcff; box-shadow: 0 0 6px #c9dcff; }
+.dot.fresh { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+
+.bar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(28px + env(safe-area-inset-bottom)); display: flex; gap: 10px; }
+.speeds { display: flex; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 3px; }
+button { font: inherit; color: var(--fg); background: none; border: 0; cursor: pointer; }
+.speeds button { padding: 8px 16px; border-radius: 999px; font-size: 13px; letter-spacing: .06em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.speeds button.on { background: rgba(255,255,255,.92); color: #000; }
+.now { border: 1px solid var(--line); border-radius: 999px; background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 0 18px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+.speeds button:hover, .now:hover { color: var(--fg); }
+.speeds button.on:hover { color: #000; }
+.hint { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom)); font-size: 11px; color: var(--muted); letter-spacing: .1em; white-space: nowrap; pointer-events: none; opacity: .8; transition: opacity 1s; }
+.hint.gone { opacity: 0; }
+
+#info { position: fixed; right: 32px; top: 50%; transform: translateY(-50%); width: 290px; padding: 22px 22px 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+#info[hidden] { display: none; }
+#info h2 { margin: 8px 0 4px; font-size: 22px; font-weight: 500; letter-spacing: .06em; }
+#info .muted { font-size: 12px; letter-spacing: .04em; }
+#info .kicker { color: var(--sel); }
+#info .kicker.fresh { color: var(--amber); }
+#info dl { margin: 18px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; }
+#info dl .wide { grid-column: 1 / -1; }
+#info dt { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+#info dd { margin: 0; font-size: 17px; font-variant-numeric: tabular-nums; }
+#close { position: absolute; top: 10px; right: 12px; font-size: 22px; color: var(--muted); line-height: 1; padding: 4px; }
+#tip { position: fixed; pointer-events: none; padding: 5px 9px; font-size: 12px; letter-spacing: .06em; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; transform: translate(14px, -50%); white-space: nowrap; }
+#tip[hidden] { display: none; }
+.credit { position: fixed; right: 32px; bottom: calc(30px + env(safe-area-inset-bottom)); font-size: 10px; color: #5d6575; letter-spacing: .04em; max-width: 300px; text-align: right; }
+.credit a { color: inherit; }
+
+@media (max-width: 760px) {
+  .brand { left: 20px; top: calc(18px + env(safe-area-inset-top)); }
+  .brand h1 { font-size: 28px; margin: 8px 0 10px; }
+  .count b { font-size: 26px; }
+  .count span { font-size: 12px; }
+  .clock { top: auto; bottom: calc(84px + env(safe-area-inset-bottom)); right: 20px; font-size: 11px; }
+  .clock #clock { font-size: 12px; margin-bottom: 3px; }
+  .clock .muted { font-size: 9px; }
+  .legend { left: 20px; bottom: calc(84px + env(safe-area-inset-bottom)); font-size: 11px; gap: 6px; }
+  .bar { bottom: calc(20px + env(safe-area-inset-bottom)); }
+  .hint, .credit { display: none; }
+  #info { left: 12px; right: 12px; width: auto; top: auto; bottom: calc(76px + env(safe-area-inset-bottom)); transform: none; padding: 16px 18px 14px; }
+  #info h2 { font-size: 19px; }
+  #info dl { grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
+  #info dd { font-size: 15px; }
+  #info dl .wide { grid-column: auto; }
+  body.has-info .legend, body.has-info .clock { display: none; }
+}
