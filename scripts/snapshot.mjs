@@ -1,7 +1,7 @@
 // Fetch a fresh CelesTrak snapshot into public/data/starlink.json.
 // Usage: node scripts/snapshot.mjs [--soft] [--from file.json]
 // --soft: keep the existing snapshot if the fetch fails (used during builds).
-import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { compact, fetchCelestrak } from '../api/_compact.js';
 
 const out = new URL('../public/data/starlink.json', import.meta.url);
@@ -11,7 +11,8 @@ const fromIdx = args.indexOf('--from');
 
 try {
   // Respect CelesTrak's rate guidance: skip if the snapshot is < 2h old.
-  if (fromIdx < 0 && existsSync(out) && Date.now() - statSync(out).mtimeMs < 2 * 3600e3) {
+  const prev = existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : null;
+  if (fromIdx < 0 && prev && Date.now() - Date.parse(prev.fetchedAt) < 2 * 3600e3) {
     console.log('snapshot is fresh (<2h), skipping fetch');
     process.exit(0);
   }

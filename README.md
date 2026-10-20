@@ -17,3 +17,7 @@ npm run build
 ```
 
 Earth textures: [Solar System Scope](https://www.solarsystemscope.com/textures/) (CC BY 4.0), via the three.js examples.
+
+![Starlink Globe](screenshot.png)
+
+Live: https://starlink-globe.vercel.app

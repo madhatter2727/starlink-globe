@@ -266,7 +266,10 @@ updateSunAndEarth(simNow());
 {
   const dir = sunDir.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), -1.35);
   dir.y = 0.32; dir.normalize();
-  camera.position.copy(dir.multiplyScalar(innerWidth < 760 ? 5.4 : 3.6));
+  // Fit the globe (plus the satellite shell) to the narrower screen axis.
+  const vt = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const t = Math.min(vt, vt * camera.aspect);
+  camera.position.copy(dir.multiplyScalar(Math.max(3.6, 1.12 / (t * 0.9))));
 }
 
 addEventListener('resize', () => {
@@ -290,6 +293,8 @@ renderer.setAnimationLoop(() => {
   updateHud(t);
   renderer.render(scene, camera);
 });
+
+setTimeout(() => $('hint')?.classList.add('gone'), 7000);
 
 init().catch((err) => {
   console.error(err);
