@@ -1,0 +1,21 @@
+{
+  "name": "starlink-globe",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Every Starlink satellite, live, on a 3D globe.",
+  "scripts": {
+    "dev": "vite",
+    "snapshot": "node scripts/snapshot.mjs",
+    "build": "node scripts/snapshot.mjs --soft && vite build",
+    "preview": "vite preview"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "satellite.js": "^7.1.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}
